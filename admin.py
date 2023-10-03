@@ -12,6 +12,16 @@ class AdminLogHandler(commands.Cog):
     Reads from multiple log files
     The option needs to be set to True in the env variables and a channel should be set
     """
+    
+    # Define an array with the names to exclude
+    excluded_names = ["Bambino", "Beard", "Havoc", "Amz", "AwarePuppet1"]
+
+    # Define an array of phrases to exclude
+    excluded_phrases = [
+        "ghost mode without access level",
+        "invisible without access level",
+        "noclip mode without access level"
+    ]
 
     def __init__(self, bot, logPath):
         self.bot = bot
@@ -42,13 +52,22 @@ class AdminLogHandler(commands.Cog):
     @tasks.loop(seconds=10)
     async def update(self):
         # Don't really know how performant this will be since it's opening 4 files -- set it to 10 seconds loop for now
-        files = glob.glob(self.logPath + "/*map.txt") + glob.glob(self.logPath + "/*cmd.txt") + glob.glob(self.logPath + "/*admin.txt") + glob.glob(self.logPath + "/*ClientActionLog.txt")
+        files = glob.glob(self.logPath + "/*BTSE_Detected_Exploits.txt") + glob.glob(self.logPath + "/*admin.txt")
         if len(files) > 0:
             newTimestamps = []
             for file in files:
                 with FileReadBackwards(file) as f:
                     for line in f:
                         timestamp, message = self.splitLine(line)
+                        
+                        # Check if any excluded name is present in the message
+                        if any(name in message for name in self.excluded_names):
+                            continue  # Skip this line if any excluded name is found
+                        
+                        # Check if any excluded phrase is present in the message
+                        if any(phrase in message for phrase in self.excluded_phrases):
+                            continue  # Skip this line if any excluded phrase is found
+                        
                         if timestamp > self.lastUpdateTimestamp:
                             newTimestamps.append(timestamp)
                             message = f'[{str(timestamp)}]: ' + message
@@ -58,4 +77,8 @@ class AdminLogHandler(commands.Cog):
                             break
             if len(newTimestamps) > 0:
                 self.lastUpdateTimestamp = max(newTimestamps)
-        
+
+
+
+
+
