@@ -1,6 +1,6 @@
 # The main file for zomboi bot. Sets up and runs the discord client
 
-from chat import ChatHandler
+# from chat import ChatHandler
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -8,7 +8,7 @@ import logging
 from maps import MapHandler
 import os
 from pathlib import Path
-from perks import PerkHandler
+#from perks import PerkHandler
 from users import UserHandler
 from admin import AdminLogHandler
 from rcon_adapter import RCONAdapter
@@ -56,19 +56,19 @@ zomboi.log.setLevel(logging.DEBUG)
 @zomboi.event
 async def on_ready():
     zomboi.log.info(f"We have logged in as {zomboi.user}")
-    channel = os.getenv("CHANNEL")
-    zomboi.channel = zomboi.get_channel(int(channel)) if channel.isdigit() else None  # Find by id
-    if zomboi.channel is None:
-        zomboi.channel = discord.utils.get(
-            zomboi.get_all_channels(), name=channel
-        )  # find by name
-    if zomboi.channel is None:
-        zomboi.log.warning("Unable to get channel, will not be enabled")
-    else:
-        zomboi.log.info("channel connected")
+    #channel = os.getenv("CHANNEL")
+    #zomboi.channel = zomboi.get_channel(int(channel)) if channel.isdigit() else None  # Find by id
+    #if zomboi.channel is None:
+    #    zomboi.channel = discord.utils.get(
+    #        zomboi.get_all_channels(), name=channel
+    #    )  # find by name
+    #if zomboi.channel is None:
+    #    zomboi.log.warning("Unable to get channel, will not be enabled")
+    #else:
+    #    zomboi.log.info("channel connected")
     await zomboi.add_cog(UserHandler(zomboi, logPath))
-    await zomboi.add_cog(ChatHandler(zomboi, logPath))
-    await zomboi.add_cog(PerkHandler(zomboi, logPath))
+    # await zomboi.add_cog(ChatHandler(zomboi, logPath))
+    # await zomboi.add_cog(PerkHandler(zomboi, logPath))
     await zomboi.add_cog(RCONAdapter(zomboi))
     await zomboi.add_cog(MapHandler(zomboi))
     await zomboi.add_cog(AdminLogHandler(zomboi, logPath))
