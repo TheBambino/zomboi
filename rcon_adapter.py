@@ -52,6 +52,28 @@ class RCONAdapter(commands.Cog):
             result = client.run(f"addxp \"{name}\" {skill}={amount}")
             await ctx.send(result)
 
+    @commands.command()
+    @has_permissions(administrator=True)
+    async def banbyID(self, ctx, steamID: int = None):
+        """Ban player by Steam ID"""
+        if steamID is None:
+            await ctx.reply("requires a value: steamID")
+            return
+        with Client(self.rconHost, self.rconPort, passwd=self.rconPassword, timeout=5.0) as client:
+            result = client.run(f"banid  \"{steamID}\"")
+            await ctx.send(result)
+            
+    @commands.command()
+    @has_permissions(administrator=True)
+    async def banbyUser(self, ctx, userName: str = None):
+        """Ban player by username"""
+        if userName is None:
+            await ctx.reply("requires a value: userName")
+            return
+        with Client(self.rconHost, self.rconPort, passwd=self.rconPassword, timeout=5.0) as client:
+            result = client.run(f"banuser  \"{userName}\"")
+            await ctx.send(result)
+            
     @tasks.loop(minutes=5)
     async def syncplayers(self):
         """Syncs online players by checking number with rcon"""
