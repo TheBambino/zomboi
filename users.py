@@ -79,21 +79,21 @@ class UserHandler(commands.Cog):
     @tasks.loop(seconds=2)
     async def update(self):
         """Update from the log file anything since the last update"""
-        files = glob.glob(self.logPath + "/*user.txt")
-        if len(files) > 0:
-            with FileReadBackwards(files[0]) as f:
-                newTimestamp = self.lastUpdateTimestamp
-                for line in f:
-                    timestamp, message = self.splitLine(line)
-                    if timestamp > newTimestamp:
-                        newTimestamp = timestamp
-                    if timestamp > self.lastUpdateTimestamp:
-                        message = self.handleLog(timestamp, message)
-                        if message is not None and self.bot.channel is not None:
-                            await self.bot.channel.send(message)
-                    else:
-                        break
-                self.lastUpdateTimestamp = newTimestamp
+        #files = glob.glob(self.logPath + "/*user.txt")
+        #if len(files) > 0:
+        #    with FileReadBackwards(files[0]) as f:
+        #        newTimestamp = self.lastUpdateTimestamp
+        #        for line in f:
+        #            timestamp, message = self.splitLine(line)
+        #            if timestamp > newTimestamp:
+        #                newTimestamp = timestamp
+        #            if timestamp > self.lastUpdateTimestamp:
+        #                message = self.handleLog(timestamp, message)
+        #                if message is not None and self.bot.channel is not None:
+        #                    await self.bot.channel.send(message)
+        #            else:
+        #                break
+        #        self.lastUpdateTimestamp = newTimestamp
 
         # Also update the bot activity here
         onlineCount = len([user for user in self.users if self.users[user].online])
